@@ -8,11 +8,11 @@
 
 ### Preparation
 
-Clone all files in the repository to a folder on your computer. Create a conda environment with all necessary dependencies with `conda env create -f linux_env.yml` (Linux) or `conda env create -f win_env.yml` (Windows) and activate it.
+Clone all files in the repository to a folder on your computer. Navigate to the folder, create a conda environment with all necessary dependencies with `conda env create -f linux_env.yml` (Linux) or `conda env create -f win_env.yml` (Windows) and activate it.
 
 ### Using the script
 
-Navigate to the folder contanining the files, start an interactive python session and run the script with:
+Navigate to the folder containing the files, start an interactive python session and run the script with:
 
 `python -i text_analysis.py`
 
@@ -44,23 +44,25 @@ Optionally print the C_V coherence scores of a model with a range of numbers of 
 
 `exmpl.compare_coherence('lda', matrix, terms, clean_corpus, max_topic=40)`
 
-Create one or more semantic analysis model and array with the preferred number of topics. Again, two values are returned here. (The default value for `no_topics` is 15 for LSA ans 21 for LDA):
+Create one or more semantic analysis models and arrays with the preferred number of topics. Again, two values are returned here. (The default value for `no_topics` is 19):
 
 `model, array = exmpl.lsa_analysis(matrix, no_topics=16)`
 
 or
 
-`model, array = exmpl.lda_analysis(matrix, no_topics=22)`
+`model, array = exmpl.lda_analysis(matrix, no_topics=28)`
 
 Create a list of top words for the model's topics:
 
 `top_terms = exmpl.top_terms(model, terms)`
 
-Represent the topics' occurence probability as horizontal bar graph for the model:
+Represent the topics' occurrence probability as horizontal bar graph for the model:
 
 `exmpl.plot_model(array, top_terms)`
 
-### For full documentation use:
+### Full documentation
+
+Type
 
 `help(TextAnalysis)`
 

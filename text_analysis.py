@@ -68,10 +68,10 @@ class TextAnalysis():
         plot_review_terms(self, matrix, terms, review_no):
             Plot the 10 most relevant words of a review on a horizontal bar graph.
     
-        lsa_analysis(self, matrix, no_topics):
+        lsa_analysis(self, matrix, no_topics=19):
             Create a Latent Semantic Analysis model and a by Singular Value Decomposition truncated matrix (array) from the original document-term matrix.
     
-        lda_analysis(self, matrix, no_topics):
+        lda_analysis(self, matrix, no_topics=19):
             Create a model and array according to Latent Dirichlet Allocation probability distributions from the original document-term matrix.
     
         top_terms(self, model, terms, no_terms=20):
@@ -117,9 +117,9 @@ class TextAnalysis():
         
         # Create different semantic analysis models and document-topic matrixes (arrays) with preferred number of topics and store in seperate variables.
         lsa_bow_model, lsa_bow_array = txt_anls.lsa_analysis(bow_matrix, no_topics=16)
-        lsa_tfidf_model, lsa_tfidf_array = txt_anls.lsa_analysis(tfidf_matrix, no_topics=13)
-        lda_bow_model, lda_bow_array = txt_anls.lda_analysis(bow_matrix, no_topics=11)
-        lda_tfidf_model, lda_tfidf_array = txt_anls.lda_analysis(tfidf_matrix,  no_topics=22)
+        lsa_tfidf_model, lsa_tfidf_array = txt_anls.lsa_analysis(tfidf_matrix, no_topics=11) 
+        lda_bow_model, lda_bow_array = txt_anls.lda_analysis(bow_matrix, no_topics=12) 
+        lda_tfidf_model, lda_tfidf_array = txt_anls.lda_analysis(tfidf_matrix,  no_topics=19) 
         
         # Create and store in a list the top words of the models' topics.
         lsa_bow_top = txt_anls.top_terms(lsa_bow_model, bow_terms)
@@ -191,7 +191,7 @@ class TextAnalysis():
         pre_corpus = [[t for t in review if t != None and t not in stop_words] for review in pre_corpus]
 
         # Lemmatizing, i.e., removing the inflexional endings of word variations to be left with dictionary forms of words.
-        pre_corpus = [[simplemma.lemmatize(t, lang='bg') for t in review] for review in pre_corpus]
+        pre_corpus = [[simplemma.lemmatize(t, lang='bg', greedy=True) for t in review] for review in pre_corpus] 
         
         # Return a list of strings for input into vectorizers.
         clean_corpus = [''.join(t + ' ' for t in review) for review in pre_corpus]
@@ -269,13 +269,13 @@ class TextAnalysis():
         return None
 
     
-    def lsa_analysis(self, matrix, no_topics=15):
+    def lsa_analysis(self, matrix, no_topics=19):
         """ 
         Create a Latent Semantic Analysis model and a by Singular Value Decomposition truncated matrix (array) from the original document-term matrix.
         
         Parameters:
             matrix (scipy.sparse._csr.csr_matrix): Return value of method bow_vectorize() or tfidf_vectorize().
-            no_topics (int, opt.): The chosen number of topics for the model, default is 15 (between best C_V values of models).
+            no_topics (int, opt.): The chosen number of topics for the model, default is 19 (best C_V value of best model).
 
         Return values:
             lsa_model (sklearn.decomposition._truncated_svd.TruncatedSVD): An LSA model with the chosen number of topics.
@@ -289,13 +289,13 @@ class TextAnalysis():
         return lsa_model, lsa_array
 
 
-    def lda_analysis(self, matrix, no_topics=21):
+    def lda_analysis(self, matrix, no_topics=19):
         """ 
         Create a model and array according to Latent Dirichlet Allocation probability distributions from the original document-term matrix. 
         
         Parameters:
             matrix (scipy.sparse._csr.csr_matrix): Return value of method bow_vectorize() or tfidf_vectorize().
-            no_topics (int, opt.): The chosen number of topics for the model, default is 21 (between best C_V values of models).
+            no_topics (int, opt.): The chosen number of topics for the model, default is 19 (best C_V value of best model).
 
         Return values:
             lda_model (sklearn.decomposition._lda.LatentDirichletAllocation): An LDA model with the chosen number of topics.
@@ -320,7 +320,7 @@ class TextAnalysis():
             no_terms (int, opt.): The specified number of topics, default is 20.
 
         Return value:
-            top_terms (list): List of top terms per topic.
+            top_terms (list): List of lists of top terms per topic. 
         """
         
         top_terms = []
